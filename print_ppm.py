@@ -2,14 +2,14 @@
 ##------------Affiche l'image d'un fichier PPM ----------##
 ###########################################################
 
-f = open("guybrush3.p3.ppm", "r", encoding="utf-8")
+f = open("Image PPM P3.txt", "r", encoding="utf-8")
 
 def affiche_p3(fichier):
     
     ligne=f.readline()
     
     ## VERIFIE LE FORMAT DU FICHIER ##
-    if form(fichier,ligne) != True:
+    if forma(fichier,ligne) != True:
         return ("Format invalide")
     
     ## DEFINIT LA TAILLE DE L'IMAGE ##
@@ -19,7 +19,7 @@ def affiche_p3(fichier):
 
 ## Fonction qui vérifie le format P3 du fichier ##
 
-def form(fichier,ligne):
+def forma(fichier,ligne):
     c="" #parcourt le fichier
     
     p=False #booléen qui indique si un p précède le caractère désigné par c
@@ -38,8 +38,12 @@ def taille(fichier,ligne):
     nx=False
     
     p=False
+    xi=
+    yi=
     x=""
     y=""
+    
+    
     
     for a in fichier:
         for c in a:
@@ -49,15 +53,42 @@ def taille(fichier,ligne):
                 p=False
             elif c == "#":
                 ligne=f.readline()
-            elif c == " " and 
-            else:
-                if x == "":
-                    x.append
+            else :
+                if xi == False or xi == True and x != "":
+                    xi=True
+                    x+=c
                 else:
-                    return x,c           
+                    if c=" ":
+                        return int(x),int(y)
+                    else:
+                        
+                             
       
 #def intens_max(fichier,l,i)    
 #def intens(fichier,l,i):
 
 
 print(affiche_p3(f))
+
+### ALGO POUR LECTURE ###
+
+fichier=[["0","1","2","3","4"],["5","6","7","8","9"],["10","11","12","13"]]
+f = open("Image PPM P3.txt", "r", encoding="utf-8")
+num_ligne=0
+
+def lecture(fichier,num_ligne):
+    i=0
+    texte=fichier[num_ligne]
+    phrase=""
+    
+    for c in texte:
+        phrase+=c
+        i+=1
+        if i == len(texte):
+            if num_ligne+1 < len(fichier):
+                return phrase+lecture(fichier,num_ligne+1)
+            else:
+                return phrase
+            
+            
+print(lecture(f,num_ligne))
