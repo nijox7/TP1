@@ -5,90 +5,91 @@
 f = open("Image PPM P3.txt", "r", encoding="utf-8")
 
 def affiche_p3(fichier):
-    
-    ligne=f.readline()
+    # Chaque fonction appelée par "affiche_p3" renvoie un nombre de ligne (l) et de colonne (i)
+    # afin de garder en sauvegarde la position de lecture dans le texte.
+    fichier = list(fichier)
     
     ## VERIFIE LE FORMAT DU FICHIER ##
-    if forma(fichier,ligne) != True:
+    form,l,i = format_P3(fichier,0,0)
+    if form != "P3":
         return ("Format invalide")
     
     ## DEFINIT LA TAILLE DE L'IMAGE ##
-    x,y=taille(fichier,ligne)
+    x,y,l,i = taille(fichier,1,0)
+    print(x,y)
+    
+    ## DEFINIT L'INTENSITE MAXIMALE D'UNE COULEUR ##
+    imax,l,i = intens_max(fichier,l,i)
+    print(imax)
 
     
-
 ## Fonction qui vérifie le format P3 du fichier ##
 
-def forma(fichier,ligne):
-    c="" #parcourt le fichier
+def format_P3(fichier,l,i):
+    P3 = ""
+    interrupteur = False
+    texte = fichier[l]
     
-    p=False #booléen qui indique si un p précède le caractère désigné par c
-    
-    for c in ligne:
-        if c == "P":
-            p = True
-        elif p == True:
-            return c == "3"
-        elif c == "#":
-            ligne=f.readline()
- 
-
-def taille(fichier,ligne):
-    
-    nx=False
-    
-    p=False
-    xi=
-    yi=
-    x=""
-    y=""
-    
-    
-    
-    for a in fichier:
-        for c in a:
-            if c == "P":
-                p=True
-            elif c == "3" and p == True:
-                p=False
-            elif c == "#":
-                ligne=f.readline()
-            else :
-                if xi == False or xi == True and x != "":
-                    xi=True
-                    x+=c
-                else:
-                    if c=" ":
-                        return int(x),int(y)
-                    else:
-                        
-                             
-      
-#def intens_max(fichier,l,i)    
-#def intens(fichier,l,i):
-
-
-print(affiche_p3(f))
-
-### ALGO POUR LECTURE ###
-
-fichier=[["0","1","2","3","4"],["5","6","7","8","9"],["10","11","12","13"]]
-f = open("Image PPM P3.txt", "r", encoding="utf-8")
-num_ligne=0
-
-def lecture(fichier,num_ligne):
-    i=0
-    texte=fichier[num_ligne]
-    phrase=""
-    
-    for c in texte:
-        phrase+=c
-        i+=1
-        if i == len(texte):
-            if num_ligne+1 < len(fichier):
-                return phrase+lecture(fichier,num_ligne+1)
+    for j in range(i,len(texte)):
+        c=texte[j]
+        if interrupteur == True:
+            if c == " " or i == len(texte)-1:
+                return P3,l,i
             else:
-                return phrase
+                P3 += c
+        elif c == "#" or j == len(texte)-1:
+            return format_P3(fichier,l+1,0)
+        else:
+            P3 += c
+            interrupteur = True
+
+def intens_max(fichier,l,i):
+    intens = ""
+    interrupteur = False
+    texte = fichier[l]
+    
+    for j in range(i,len(texte)):
+        c=texte[j]
+        if interrupteur == True:
+            if c == " " or i == len(texte)-1:
+                intens=int(intens)
+                return int(intens),l,i
+            else:
+                intens += c
+        elif c == "#" or j == len(texte)-1:
+            return intens_max(fichier,l+1,0)
+        else:
+            intens += c
+            interrupteur = True
             
+
+def taille(fichier,l,i):
+    taille=[]
+    compteur=0
+    
+    while compteur!=2:
+        
+        c = fichier[l][i]
+        if c == "#" or i == len(fichier[l])-1:
+            i = 0
+            l += 1
+        elif c == " ":
+            if i<len(fichier[l])-1:
+                i += 1
+            else:
+                i = 0
+                l += 1
+        else:
+            nombre = ""
+            while c != " " and i != len(fichier[l])-1:
+                c = fichier[l][i]
+                nombre += c
+                i += 1
+            compteur += 1
+            taille.append(nombre)
+    
+    return int(taille[0]),int(taille[1]),l,i
+                
+                
             
-print(lecture(f,num_ligne))
+print(affiche_p3(f))
